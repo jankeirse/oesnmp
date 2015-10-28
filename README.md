@@ -134,3 +134,9 @@ I don't know how to handle this properly in our monitoring system for thousands 
 
 ### Pacific Application server for OpenEdge
 Use JMX monitoring for PAS instead.
+
+
+###
+## Additional documentation
+There's a google document showing the various OID's here: https://goo.gl/Zi8qHx
+A presentation about the product exists and will be shared after the 2015 EMEA Pug Challenge, if it is not here yet by 2015-11-15 please contact me because I forgot to link it. 
