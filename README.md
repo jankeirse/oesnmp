@@ -1,7 +1,7 @@
 # oesnmp
 Expose OpenEdge infrastructure to *any* monitoring platform
 
-OESNMP is a set of utilites to expose information about OpenEdge Appservers, Databases and related infrastructure to Monitoring systems supporting SMTP.
+OESNMP is a set of utilites to expose information about OpenEdge Appservers, Databases and related infrastructure to Monitoring systems supporting SNMP.
 
 OESNMP was initially developed with 10.2B and is currently tested on 11.3. 
 
@@ -54,7 +54,7 @@ sudo yum install pip
 sudo pip install snmp_passpersist
 ```
 
-If you don't want to install pi, you can also copy the snmp_passpersist.py script toe /opt/pyprogram/oesnmp/
+If you don't want to install pip, you can also copy the snmp_passpersist.py script toe /opt/pyprogram/oesnmp/
 
 
 Next configure the following components as desired. If you want to test a component, you can run it from the shell and run the DUMPALL command to see if you get proper output (OID's with values) or error messages.
