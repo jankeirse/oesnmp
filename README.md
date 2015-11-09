@@ -1,9 +1,11 @@
 # oesnmp
 Expose OpenEdge infrastructure to *any* monitoring platform
 
-OESNMP is a set of utilites to expose information about OpenEdge Appservers, Databases and related infrastructure to Monitoring systems supporting SNMP.
+OESNMP is a set of utilites to expose information about OpenEdge Appservers, Databases and related infrastructure to Monitoring systems supporting SNMP. This allows you to notice unusual behaviour, verify performance tuning has the desired results, warn you before problems result in downtime,... 
 
-OESNMP was initially developed with 10.2B and is currently tested on 11.3. 
+Tools like Promon/ProTop are great for real time monitoring, looking at changes and problems in real time, but they don't allow you to find out how the current trends compare to yesterday, last week, last month, last year,... One of the purposes of OESNMP is to fill that gap (but NOT to replace them, for realtime monitoring while resolving issues, the instant updating nature of protop/promon remains indispensible!)
+
+OESNMP was initially developed with OpenEdge 10.2B and is currently tested on 11.3. 
 
 ![Screenshot of resulting graphs in zabbix](https://raw.githubusercontent.com/jankeirse/oesnmp/master/support/screenshot.png)
 
@@ -26,7 +28,7 @@ You need OpenEdge installed to run most tools, some parts need to run on the act
 This is used to monitor AppServers and Webspeed Brokers.  It does not have to run on the server that runs the appservers, but does need an OpenEdge Installation that can run asbman. 
 
 ### promon.py
-This is used to expose information about your database obtained from promon. This must be run on the same server that runs the database. 
+This is used to expose information about your database obtained from promon. This must be run on the same server that runs the database. The intent is to eventually replace it with vst.py entirely. 
 
 ### vst.py
 Some information we wanted to expose wat not available in promon, so we started exposing information by dumping data from the vst's. 
@@ -38,7 +40,8 @@ This script can be used to monitor working directory contents. It provides infor
 the support folder contains an export of some templates that can be used in [Zabbix](http://www.zabbix.com/) to monitor your servers.
 
 ## Installation
-Copy the contents of the deploy folder to /opt/pyprogram/oesnmp
+Copy the contents of the deploy folder to /opt/pyprogram/oesnmp. Set the proper executeable bits:
+chmod +x asbmansnmp.sh promon.exp promon.py promon.sh vst.py vst.sh wrkdirmon.py
 
 Install and configure net-snmp. As long as you can not run 
 ```
