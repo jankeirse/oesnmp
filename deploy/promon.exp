@@ -1,0 +1,135 @@
+#!/usr/bin/expect -f
+# promon.exp - Copyleft 2013-2015 TVH Group NV. <kalman.tiboldi@tvh.com>
+#    This file is part of OESNMP.
+#
+#    OESNMP is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    OESNMP is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with OESNMP.  If not, see <http://www.gnu.org/licenses/>.
+#
+# called from promon.py to determine the output of promon
+# Uncomment the following line for debugging 
+# exp_internal 1
+if { $argc ne 1 } {
+	puts "There should be exactly one paramter, the database name!" 
+	exit 1
+}
+set timeout 5
+set database [lindex $argv 0] 
+set dlc "/usr/dlc" 
+set dlcbin "$dlc/bin"
+set promon "$dlcbin/promon"
+
+expect_after {
+    timeout {
+	log_user 1
+	puts "Promon did not return the expected output in time, assuming a problem, exiting."
+	puts "Real output was: "
+	puts $expect_out(buffer)	
+	exit 1
+    }
+}
+
+log_user 0
+set pid [spawn "$promon" $database]
+expect {
+	eof { log_user 1; puts "Promon failed, error was $expect_out(buffer)" ; exit 1 } 
+	"*5.  Activity" 
+       }
+expect "*Enter your selection:"
+send "5\n"
+#swallow headers, we don't need them
+expect "*Event                 Total   Per Sec   Event                 Total   Per Sec"
+# now match all output on this screen and store it in the result buffer:
+expect "*RETURN - repeat, U - continue uninterrupted, Q - quit:"
+set result $expect_out(buffer)
+send "q\n"
+expect "*6.  Shared Resources"
+send "6\n"
+expect "*Shared Resources:"
+expect "*RETURN - show remaining, U - continue uninterrupted, Q - quit:"
+set result2 $expect_out(buffer)
+send "\n"
+expect "*RETURN - show remaining, U - continue uninterrupted, Q - quit:"
+set result3 $expect_out(buffer)
+send "\n"
+expect "*RETURN - repeat, U - continue uninterrupted, Q - quit:"
+set result4 $expect_out(buffer)
+send "q\n"
+expect "*R&D.  Advanced options"
+send "R&D\n"
+expect "*3. Other Displays ..."
+expect "*Enter a number, <return>, P, T, or X (? for help):"
+send "3\n"
+expect "*1. Performance Indicators"
+expect "*Enter a number, <return>, P, T, or X (? for help):"
+send "1\n"
+expect "*Latch timeouts"
+expect "*Buffer pool hit rate:"
+set latchtimeouts $expect_out(buffer)
+expect "*Enter <return>, A, L, R, S, U, Z, P, T, or X (? for help):"
+send "x\n"
+expect eof
+
+# make the output one very long comma seperated list
+append result $result2 $result3 $result4
+regsub -all {:} $result { } result 
+regsub -all {\s{2,}} $result {;} result
+set result [split $result ";"]
+
+# filter out alphanumeric labels as keys and the rest as values 
+# for the previous key. With the exception of the last line of 
+# output this works
+set resultnew {}
+set currentobject {}
+foreach item $result {
+	if { [regexp {^[A-Za-z]+} $item ] } {
+		if { [ llength $currentobject ] > 1 } {
+			lappend resultnew $currentobject
+		}
+		set currentobject {}
+		lappend currentobject $item
+	} elseif { [regexp {.*Servers,.*Users} $item ] } {
+		# we'll parse the last line separately, it's a completely different thing
+		set servers $item
+	} else {
+		lappend currentobject $item
+	}
+	
+}
+if {[ llength $currentobject ] > 1} {
+	lappend resultnew $currentobject
+}
+
+# process servers, sample line:
+# {3 Servers, 0 Users (0 Local, 0 Remote, 0 Batch),5 Apws}
+regsub -all {\(} $servers {,} servers
+regsub -all {\)} $servers {} servers
+set servers [split $servers ","]
+
+foreach item $servers {
+	set item [split [string trim $item] " "]
+	set object {}
+	lappend object [lindex $item 1]
+	lappend object [lindex $item 0]
+	lappend resultnew  $object 
+}
+
+foreach item $resultnew {
+	puts [join $item ":"]
+}
+
+# process latch timeouts manually
+regsub -all {\s{2,}} $latchtimeouts {;} latchtimeouts
+set latchtimeouts [split $latchtimeouts ";"] 
+set latchout "latchtimeouts:"
+append latchout [ lindex $latchtimeouts 1]
+puts $latchout 
