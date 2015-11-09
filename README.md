@@ -140,4 +140,4 @@ Use JMX monitoring for PAS instead.
 ## Additional documentation
 There's a google document showing the various OID's here: https://goo.gl/Zi8qHx
 
-A presentation about the product exists and will be shared after the 2015 EMEA Pug Challenge, if it is not here yet by 2015-11-15 please contact me because I forgot to link it. 
+A presentation about the product is available here: https://goo.gl/rfUmPX 
