@@ -126,6 +126,9 @@ Document how to configure selinux to support oesnmp, it can be done but requires
 ### Better Averages
 Currently some averages like request duration are based on the request duration since server start. It would be better to have request duration for the last minute, but this requires extra data to be exposed by PSC. 
 
+Vote here if you want this: https://community.progress.com/community_groups/products_enhancements/i/openedge/visibility_of_total_request_duration_on_appserver
+
+
 ### promon replacement
 It would be better to merge everything from promon.py into vst.py and determine it with the VST's. This could lift the expect requirement. 
 
@@ -133,7 +136,7 @@ It would be better to merge everything from promon.py into vst.py and determine 
 I don't know how to handle this properly in our monitoring system for thousands of tables, so I haven't implemented it yet, but it should be easy for smaller databases.
 
 ### Pacific Application server for OpenEdge
-Use JMX monitoring for PAS instead.
+This will not be added to OESNMP: Use JMX monitoring for PAS instead.
 
 
 ###
