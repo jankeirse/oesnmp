@@ -5,6 +5,8 @@ OESNMP is a set of utilites to expose information about OpenEdge Appservers, Dat
 
 OESNMP was initially developed with 10.2B and is currently tested on 11.3. 
 
+![Screenshot of resulting graphs in zabbix](https://raw.githubusercontent.com/jankeirse/oesnmp/master/support/screenshot.png)
+
 ## Requirements
 ### net-snmp
 All OESNMP scripts are started from net-snmp.  More information at [http://www.net-snmp.org/](http://www.net-snmp.org/)
@@ -18,6 +20,8 @@ All scripts are added to net-snmp under OID .1.3.6.1.4.1.42674 , this is an OID 
 You need OpenEdge installed to run most tools, some parts need to run on the actual database server, others can be run on a remote server used for monitoring, or on the actual server.
 
 ## Components
+![Image of the oesnmp components](https://raw.githubusercontent.com/jankeirse/oesnmp/master/support/structure.png)
+
 ### asbmansnmp.sh
 This is used to monitor AppServers and Webspeed Brokers.  It does not have to run on the server that runs the appservers, but does need an OpenEdge Installation that can run asbman. 
 
