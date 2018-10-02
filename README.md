@@ -151,10 +151,6 @@ It would be better to merge everything from promon.py into vst.py and determine 
 ### per table/index statistics
 I don't know how to handle this properly in our monitoring system for thousands of tables, so I haven't implemented it yet, but it should be easy for smaller databases.
 
-### Pacific Application server for OpenEdge
-This will not be added to OESNMP: Use JMX monitoring for PAS instead.
-
-
 ###
 ## Additional documentation
 There's a google document showing the various OID's here: https://goo.gl/Zi8qHx
