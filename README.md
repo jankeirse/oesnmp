@@ -36,6 +36,9 @@ Some information we wanted to expose wat not available in promon, so we started 
 ### wrkdirmon.py
 This script can be used to monitor working directory contents. It provides information about the size of DBI, LBI and srt files and filesizes. 
 
+### pasoe.py
+This script can be used to expose the metrics that are accesible through the REST api with SNMP. It is usefull for monitoring systems that don't allow to interpret REST api's for determining metrics.
+
 ### zabbix template
 the support folder contains an export of some templates that can be used in [Zabbix](http://www.zabbix.com/) to monitor your servers.
 
@@ -123,6 +126,12 @@ pass_persist .1.3.6.1.4.1.42674.4 /opt/pyprogram/oesnmp/wrkdirmon.py
 ```
 Add working dir sections as required to /opt/pyprogram/oesnmp/wrkdirmon.cfg
 
+### pasoe.py
+Add the following line to /etc/snmp/snmpd.conf
+```
+pass_persist .1.3.6.1.4.1.42674.13 /opt/pyprogram/oesnmp/pasoe.py
+```
+Configure the servers you want to monitor in /opt/pyprogram/oesnmp/pasoe.cfg. The script has been tested with only one application per server and only with webhandler.
 
 ### 
 ## Todo
