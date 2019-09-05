@@ -1,5 +1,5 @@
 /*
-    Broker.java - Copyleft 2013-2015 TVH Group NV. <kalman.tiboldi@tvh.com>
+    Broker.java - Copyleft 2013-2019 TVH Parts Holding NV. <jan.keirse@tvh.com>
     This file is part of OESNMP.
 
     OESNMP is free software: you can redistribute it and/or modify
@@ -27,15 +27,10 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import org.apache.commons.io.output.NullOutputStream;
 
-/**
- *
- * @author jankeir
- */
 public class Broker {
     public enum BrokerType {
         ASBROKER, WSBROKER
     };
-    
     
     private AdminServer server ;
     private UBTRemoteObject_Stub remoteStub;
@@ -44,7 +39,7 @@ public class Broker {
     public Broker(AdminServer server, UBTRemoteObject_Stub remoteStub) throws RemoteException {
         this.server = server;
         this.remoteStub = remoteStub;
-        this.type = "AppServer".equals(remoteStub.getDisplayName()) ? BrokerType.ASBROKER : BrokerType.WSBROKER;        
+        this.type = "UBroker.AS".equals(remoteStub.getDisplayName()) ? BrokerType.ASBROKER : BrokerType.WSBROKER;        
     }
 
     public AdminServer getServer() {
@@ -60,8 +55,6 @@ public class Broker {
     }
     
     public BrokerStatus getStatus() throws RemoteException {
-        
-        
         PrintStream nulloutput = new PrintStream(new NullOutputStream());
         PrintStream out = System.out;
         PrintStream err = System.err;
@@ -86,16 +79,11 @@ public class Broker {
             System.setErr(err);
         }
         
-        
-        
-        
         HashMap<Integer,String> labels = new HashMap<>(15);
         HashMap<String,String> values = new HashMap<>(15);
         ToolRemoteCmdDescriptor cmd = new ToolRemoteCmdDescriptor();
         
-        ToolRemoteCmdStatus cmdStatus ;
-        cmd.makeGetSummaryStatusLblPkt((type == BrokerType.ASBROKER ? "AS." : "WS.") + getBrokerName());
-        /*cmd.makeGetSummaryStatusDataPkt( (type == BrokerType.ASBROKER ? "AS." : "WS.") + getBrokerName() );*/
+        cmd.makeGetSummaryStatusLblPkt("Ubroker." +  (type == BrokerType.ASBROKER ? "AS." : "WS.") + getBrokerName());
         ToolRemoteCmdStatus labelFetcher = remoteStub.getRemoteManageObject().doRemoteToolCmd(cmd);
         Enumeration summaryLabels = labelFetcher.fetchGetSummaryStatuslblStatus();
         if (summaryLabels != null) {
@@ -106,7 +94,6 @@ public class Broker {
                 labels.put(i, label.trim());
                 i++;
             }
-
             
             cmd.makeGetSummaryStatusDataPkt( (type == BrokerType.ASBROKER ? "AS." : "WS.") + getBrokerName() );
             ToolRemoteCmdStatus statusFetcher = remoteStub.getRemoteManageObject().doRemoteToolCmd(cmd);
@@ -121,8 +108,5 @@ public class Broker {
         return new BrokerStatus(values, maxAgents, maxClients);
         
     }
-    
-    
-    
     
 }

@@ -1,5 +1,5 @@
 /*
-    BrokerStatus.java - Copyleft 2013-2015 TVH Group NV. <kalman.tiboldi@tvh.com>
+    BrokerStatus.java - Copyleft 2013-2019 TVH Parts Holding NV. <jan.keirse@tvh.com>
     This file is part of OESNMP.
 
     OESNMP is free software: you can redistribute it and/or modify
